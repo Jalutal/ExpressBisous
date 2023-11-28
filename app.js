@@ -1,36 +1,89 @@
 const express = require('express')
-// Déjà installé dans le package.json, on va le chercher pour construire une instance d'express.
+const mockCoworkings = require('./mock-coworking')
+// On importe le tableau du fichier.js
+//On construit une instance d'express 
 const app = express()
-// Constructeur vide dans lequel on crée son app
 const port = 3000
-// Port arbitraire, souvent 3000 dans les docs.
 
-
-const arrNames = [
-  "paul", "pierre", "mathilde"
+const arrUsers = [
+    {
+        id: 12,
+        name: "Paul",
+        age: 35
+    },
+    {
+        id: 15,
+        name: "Pierre",
+        age: 28
+    }, {
+        id: 6,
+        name: "Mathilde",
+        age: 19
+    }
 ]
 
-
 app.get('/', (req, res) => {
-  res.send('Salut tout le monde cest moi !')
+    res.send('Hello World !')
 })
-// le / est la route de base. 
 
 app.get('/names', (req, res) => {
+    // Une requête ne peut renvoyer qu'une seule et unique réponse
+    // D'abord, on créé une chaîne de caractères à partir des éléments du tableau, puis on la renvoie dans une réponse
+    // => Paul et Pierre et Mathilde !
+    let sentence = ""
 
-// Une requête ne peut renvoyer qu'une seule et même réponse 
-let sentence = `${arrNames[0]} et ${arrNames[1]} et ${arrNames[2]} !`;
-  arrNames.forEach(() => {
-    res.send(sentence);
+    arrUsers.forEach(obj => {
+        sentence += obj.name + " "
+    })
+
+    sentence += "!"
+    res.send(sentence)
+})
+
+app.get('/names/:id', (req, res) => {
+   // console.log(parseInt(req.params.id))
+    // Implémenter le test pour sélectionner dans le tableau l'objet dont l'id correspond à l'id passé en paramètre d'url
+    // let result = "not found";
+    let urlId = parseInt(req.params.id)
+
+  //   for (let i = 0; i < arrUsers.length; i++) { //j'ouvre une boucle for qui me permet de parcourir mon tableau 
+  // const element = arrUsers[i]                   // je déclare ma constante qui contient mon tableau ainsi que l'id
+  // if(element.id === parseInt(req.params.id)) { // mon if : le parseint est une fonction qui sert a analyser des strings donc a le mettre en nombre entier ici, donc entre autre je vérifie que l'element est le même que l'ID dans le tableau 
+  //   result = arrUsers[i].name // je déclare mon résultat
+  //   break;
+  // }
+  //   }
+  let result = arrUsers.find(el => el.id === urlId)
+  if (!result) {
+    result = "not found"
+    }
+    else {
+      result = result.name
+    }
+    res.send(result) // j'envoie la réponse 
+})
+
+app.get('/api/coworkings', (req, res) => {
+  const numberOfCoworkings = mockCoworkings.length;  
+  res.send(`Il y a ${numberOfCoworkings} coworkings.`)
+})
+
+
+app.get('/api/coworkings/:id', (req, res) => {
+  let coworkId = parseInt(req.params.id); 
+  let resultCowork = mockCoworkings.find(el => el.id === coworkId);
+
+  if (!resultCowork) {
+    resultCowork = `not found avec ${req.params.id}`;
+  } else {
+    resultCowork = resultCowork.name;
   }
-    )
-  
-});
 
+  res.send(resultCowork);
+})
 
 app.listen(port, () => {
-  console.log(`Un exemple d'app qui écoute sur le port ${port}`)
+    console.log(`Example app listening on port ${port}`)
 })
-// Quand on execute app.js, il écoute en continu sur le port 3000 les requêtes faites.
 
-// On stop le run à base de CTRL+C
+
