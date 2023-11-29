@@ -4,7 +4,7 @@
   "description": "learn express",
   "main": "app.js",
   "scripts": {
-    "start" : "npx nodemon app.js",  
+    "start": "npx nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jesse Granier",
@@ -13,6 +13,7 @@
     "express": "^4.18.2"
   },
   "devDependencies": {
+    "morgan": "^1.10.0",
     "nodemon": "^3.0.1"
   }
 }
